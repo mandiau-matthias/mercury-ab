@@ -1,5 +1,5 @@
 /** Deterministic Mercury assignment. The same key, definition and visitor yield the same arm. */
-import type { RegistryEntry, VariantKey } from './types.js';
+import type { RegistryEntry, VariantKey } from "./types.js";
 /**
  * 32-bit FNV-1a. UTF-16 code units are folded byte-wise so the hash matches
  * across runtimes (Node + browser + edge). Result is unsigned via `>>> 0`.

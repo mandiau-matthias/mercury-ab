@@ -1,5 +1,5 @@
 /** Deterministic Mercury assignment. The same key, definition and visitor yield the same arm. */
-import type { RegistryEntry, VariantKey } from './types.js';
+import type { RegistryEntry, VariantKey } from "./types.js";
 
 /**
  * 32-bit FNV-1a. UTF-16 code units are folded byte-wise so the hash matches
@@ -35,7 +35,7 @@ function hashToUnit(experiment: string, distinctId: string): number {
 function saltedHashToUnit(
 	salt: string,
 	experiment: string,
-	distinctId: string
+	distinctId: string,
 ): number {
 	return fnv1a32(`${salt}\u0000${experiment}\u0000${distinctId}`) / 0x100000000;
 }
@@ -52,27 +52,27 @@ export type MercuryV2Bucket = {
  */
 export function bucketMercuryV2(
 	entry: RegistryEntry,
-	distinctId: string
+	distinctId: string,
 ): MercuryV2Bucket {
-	if (entry.status !== 'running' || entry.variants.length === 0) {
-		return { enrolled: false, variant: 'control' };
+	if (entry.status !== "running" || entry.variants.length === 0) {
+		return { enrolled: false, variant: "control" };
 	}
 	const enrollmentPercent = Math.min(
 		100,
-		Math.max(0, entry.enrollmentPercent ?? 100)
+		Math.max(0, entry.enrollmentPercent ?? 100),
 	);
 	const enrolled =
-		saltedHashToUnit('mercury-enrollment-v2', entry.key, distinctId) <
+		saltedHashToUnit("mercury-enrollment-v2", entry.key, distinctId) <
 		enrollmentPercent / 100;
-	if (!enrolled) return { enrolled: false, variant: 'control' };
+	if (!enrolled) return { enrolled: false, variant: "control" };
 
 	const totalWeight = entry.variants.reduce(
 		(sum, variant) => sum + Math.max(0, variant.weight),
-		0
+		0,
 	);
-	if (totalWeight <= 0) return { enrolled: false, variant: 'control' };
+	if (totalWeight <= 0) return { enrolled: false, variant: "control" };
 	const target =
-		saltedHashToUnit('mercury-variant-v2', entry.key, distinctId) * totalWeight;
+		saltedHashToUnit("mercury-variant-v2", entry.key, distinctId) * totalWeight;
 	let cumulative = 0;
 	for (const variant of entry.variants) {
 		cumulative += Math.max(0, variant.weight);
@@ -80,7 +80,7 @@ export function bucketMercuryV2(
 	}
 	return {
 		enrolled: true,
-		variant: entry.variants[entry.variants.length - 1]?.key ?? 'control',
+		variant: entry.variants[entry.variants.length - 1]?.key ?? "control",
 	};
 }
 
@@ -100,21 +100,21 @@ export function bucketMercuryV2(
  */
 export function bucketLocal(
 	entry: RegistryEntry,
-	distinctId: string
+	distinctId: string,
 ): VariantKey {
 	if (
-		entry.status === 'draft' ||
-		entry.status === 'paused' ||
-		entry.status === 'shipped'
+		entry.status === "draft" ||
+		entry.status === "paused" ||
+		entry.status === "shipped"
 	)
-		return 'control';
-	if (!entry.variants || entry.variants.length === 0) return 'control';
+		return "control";
+	if (!entry.variants || entry.variants.length === 0) return "control";
 
 	const totalWeight = entry.variants.reduce(
 		(sum, v) => sum + Math.max(0, v.weight),
-		0
+		0,
 	);
-	if (totalWeight <= 0) return 'control';
+	if (totalWeight <= 0) return "control";
 
 	const u = hashToUnit(entry.key, distinctId);
 	const target = u * totalWeight;

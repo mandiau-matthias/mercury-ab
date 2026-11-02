@@ -11,7 +11,7 @@
  * you're encoding business logic in the registry — push it back into a
  * named predicate so the registry stays declarative.
  */
-import type { TargetingContext, TargetingRule } from './types.js';
+import type { TargetingContext, TargetingRule } from "./types.js";
 /** Include when the request locale matches one of `slugs` (case-insensitive). */
 declare function locale(...slugs: string[]): TargetingRule;
 /** Include when the role matches one of `slugs` (case-insensitive). */

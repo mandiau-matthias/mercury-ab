@@ -36,18 +36,18 @@ function saltedHashToUnit(salt, experiment, distinctId) {
  * enrolled cohort with arm boundaries. PostHog never participates.
  */
 export function bucketMercuryV2(entry, distinctId) {
-    if (entry.status !== 'running' || entry.variants.length === 0) {
-        return { enrolled: false, variant: 'control' };
+    if (entry.status !== "running" || entry.variants.length === 0) {
+        return { enrolled: false, variant: "control" };
     }
     const enrollmentPercent = Math.min(100, Math.max(0, entry.enrollmentPercent ?? 100));
-    const enrolled = saltedHashToUnit('mercury-enrollment-v2', entry.key, distinctId) <
+    const enrolled = saltedHashToUnit("mercury-enrollment-v2", entry.key, distinctId) <
         enrollmentPercent / 100;
     if (!enrolled)
-        return { enrolled: false, variant: 'control' };
+        return { enrolled: false, variant: "control" };
     const totalWeight = entry.variants.reduce((sum, variant) => sum + Math.max(0, variant.weight), 0);
     if (totalWeight <= 0)
-        return { enrolled: false, variant: 'control' };
-    const target = saltedHashToUnit('mercury-variant-v2', entry.key, distinctId) * totalWeight;
+        return { enrolled: false, variant: "control" };
+    const target = saltedHashToUnit("mercury-variant-v2", entry.key, distinctId) * totalWeight;
     let cumulative = 0;
     for (const variant of entry.variants) {
         cumulative += Math.max(0, variant.weight);
@@ -56,7 +56,7 @@ export function bucketMercuryV2(entry, distinctId) {
     }
     return {
         enrolled: true,
-        variant: entry.variants[entry.variants.length - 1]?.key ?? 'control',
+        variant: entry.variants[entry.variants.length - 1]?.key ?? "control",
     };
 }
 /**
@@ -74,15 +74,15 @@ export function bucketMercuryV2(entry, distinctId) {
  * - Weights are normalized; they don't have to sum to 100.
  */
 export function bucketLocal(entry, distinctId) {
-    if (entry.status === 'draft' ||
-        entry.status === 'paused' ||
-        entry.status === 'shipped')
-        return 'control';
+    if (entry.status === "draft" ||
+        entry.status === "paused" ||
+        entry.status === "shipped")
+        return "control";
     if (!entry.variants || entry.variants.length === 0)
-        return 'control';
+        return "control";
     const totalWeight = entry.variants.reduce((sum, v) => sum + Math.max(0, v.weight), 0);
     if (totalWeight <= 0)
-        return 'control';
+        return "control";
     const u = hashToUnit(entry.key, distinctId);
     const target = u * totalWeight;
     let cumulative = 0;

@@ -12,8 +12,8 @@
  * named predicate so the registry stays declarative.
  */
 
-import { fnv1a32 } from './bucketing.js';
-import type { TargetingContext, TargetingRule } from './types.js';
+import { fnv1a32 } from "./bucketing.js";
+import type { TargetingContext, TargetingRule } from "./types.js";
 
 /** Always include — used by `RegistryEntry`s that target everyone. */
 const always: TargetingRule = () => true;
@@ -28,10 +28,10 @@ function locale(...slugs: string[]): TargetingRule {
 }
 
 /** Include only authenticated users. */
-const authenticated: TargetingRule = (ctx) => ctx.authState === 'authenticated';
+const authenticated: TargetingRule = (ctx) => ctx.authState === "authenticated";
 
 /** Include only anonymous (logged-out) users. */
-const anonymous: TargetingRule = (ctx) => ctx.authState === 'anonymous';
+const anonymous: TargetingRule = (ctx) => ctx.authState === "anonymous";
 
 /** Include when the role matches one of `slugs` (case-insensitive). */
 function role(...slugs: string[]): TargetingRule {
@@ -127,17 +127,20 @@ export const target = {
  * fails closed.
  */
 export const DEFAULT_TARGETING_CONTEXT: TargetingContext = {
-	locale: 'unknown',
-	authState: 'unknown',
-	role: 'unknown',
+	locale: "unknown",
+	authState: "unknown",
+	role: "unknown",
 	isInternal: false,
 };
 
 /** A broken predicate excludes the visitor from measurement. */
-export function passesTargeting(entry: { targeting?: TargetingRule }, context: TargetingContext): boolean {
-    try {
-        return entry.targeting?.(context) ?? true;
-    } catch {
-        return false;
-    }
+export function passesTargeting(
+	entry: { targeting?: TargetingRule },
+	context: TargetingContext,
+): boolean {
+	try {
+		return entry.targeting?.(context) ?? true;
+	} catch {
+		return false;
+	}
 }
