@@ -1,5 +1,9 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mercury A/B · The sign-up experiment</title>
 <link rel="stylesheet" href="./style.css"><main><small>AUTOMATRON / EXPERIMENT 01</small><h1>One page.<br>Two invitations.</h1><p>Try a fictional sign-up. Reload to see whether the same visitor gets the same invitation.</p>
-<section><h2>Your sign-up page</h2><button id="signup" disabled>Loading experiment…</button> <label><input id="consent" type="checkbox"> Allow measurement in this browser</label><p id="assignment" aria-live="polite"></p><button class="secondary" id="next">Try a new fictional visitor</button></section>
+<section><h2>Your sign-up page</h2><button id="signup" disabled>Loading experiment…</button> <label><input id="consent" type="checkbox"> Allow measurement in this browser</label><p id="assignment" aria-live="polite"></p>
+<details><summary>Why did I get this version?</summary>
+<p id="assignment-reason"></p>
+<p>Reloading reuses the same visitor ID. A new visitor gets a new ID and can still land in the same group. Turning measurement on or off changes what gets counted.</p></details>
+<button class="secondary" id="next">Try a new fictional visitor</button></section>
 <section><h2>What counted?</h2><p id="status" aria-live="polite"></p><table><thead><tr><th>Version</th><th>Visitors exposed</th><th>Sign-ups</th></tr></thead><tbody id="rows"></tbody></table><p id="readout"></p><button class="secondary" id="reset">Clear local results</button></section>
 <footer>All events stay in this browser. <a href="https://github.com/mandiau-matthias/mercury-ab">Source and server-rendered demo on GitHub</a></footer></main><script type="module" src="./app.js"></script></html>

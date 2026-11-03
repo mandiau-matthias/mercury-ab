@@ -18,6 +18,9 @@ $("assignment").textContent =
 	" · visitor " +
 	visitor.slice(0, 8);
 $("signup").textContent = labels[assignment.variant];
+$("assignment-reason").textContent =
+	`Mercury combines the experiment key (${experiment.key}) with your fictional visitor ID (${visitor}) to pick a group. ` +
+	`In this 50/50 experiment, your group is ${assignment.variant}.`;
 $("signup").disabled = false;
 $("consent").checked = read(".consent") === "yes";
 function show(events) {
