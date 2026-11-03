@@ -24,10 +24,9 @@ $("assignment-reason").textContent =
 $("signup").disabled = false;
 $("consent").checked = read(".consent") === "yes";
 function show(events) {
+	const recorded = events.filter((e) => e.experiment === experiment.key);
 	const counts = experiment.variants.map(({ key: arm }) => {
-		const rows = events.filter(
-			(e) => e.variant === arm && e.experiment === experiment.key,
-		);
+		const rows = recorded.filter((e) => e.variant === arm);
 		return [
 			arm,
 			rows.filter((e) => e.kind === "exposure").length,
@@ -45,6 +44,13 @@ function show(events) {
 			return tr;
 		}),
 	);
+	$("empty-log").hidden = recorded.length > 0;
+	$("event-log").replaceChildren(...recorded.map((event) => {
+		const item = document.createElement("li");
+		const label = event.kind === "signup" ? "Sign-up" : "Exposure";
+		item.textContent = `${label} · ${event.variant} · visitor ${event.visitor.slice(0, 8)}`;
+		return item;
+	}));
 	$("readout").textContent = counts.some(([, n]) => n < 20)
 		? "Too little evidence. At least one version has fewer than 20 exposed visitors."
 		: "Both versions passed the demo traffic floor. These descriptive counts alone cannot establish a winner.";

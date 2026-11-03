@@ -1,6 +1,6 @@
 {
 	"name": "mercury-ab",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Deterministic A/B assignment and consent-aware measurement for web apps.",
 	"type": "module",
 	"license": "MIT",
