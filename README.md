@@ -12,8 +12,36 @@ Enable measurement, click the sign-up button twice, and reload. The sign-up coun
 
 With Node.js 18 or later, run `npm start` and open <http://127.0.0.1:4173>. The server sets a random visitor cookie and renders the invitation. The browser recomputes the assignment and checks that it agrees. The hosted static preview computes it in the browser. Neither version needs an analytics account or sends events to a service.
 
-### Use the toolkit
+### Use Mercury in your app
 
-Import `assign`, `target`, and `record` from the package. Call `assign(experiment, visitorId, context)` on the server and pass its result into the first render. Use a stable identifier and keep the experiment key and weights fixed while collecting data. The library separates enrollment from arm allocation. `record(events, event, consent, enrolled)` accepts one exposure and one subsequent sign-up per experiment, arm and visitor. Use atomic deduplication in your own shared event store when measuring across browsers.
+Install the tagged GitHub release into a Node.js project. It includes compiled JavaScript and TypeScript declarations.
+
+```sh
+npm install https://github.com/mandiau-matthias/mercury-ab/archive/refs/tags/v1.0.0.tar.gz
+```
+
+Save this as `signup.mjs` and run `node signup.mjs`:
+
+```js
+import { assign, record } from "mercury-ab";
+
+const experiment = {
+  key: "signup-v1",
+  status: "running",
+  variants: [
+    { key: "control", weight: 50 },
+    { key: "invitation", weight: 50 },
+  ],
+};
+const visitor = "example-visitor";
+const { enrolled, variant } = assign(experiment, visitor);
+const exposure = { kind: "exposure", experiment: experiment.key, visitor, variant };
+const consent = true; // In your app, read the visitor's actual choice.
+const firstRender = record([], exposure, consent, enrolled);
+const secondRender = record(firstRender, exposure, consent, enrolled);
+console.log(variant, secondRender.length); // control 1
+```
+
+Use the same visitor ID and experiment definition on the server and in the browser. Pass the server's assignment to the first render and record exposure when the invitation is shown. To count a completed sign-up, pass the same event with `kind: "signup"`. The toolkit requires a prior exposure and deduplicates per experiment, variant and visitor. For a shared event store, enforce the same uniqueness rule atomically.
 
 Run `npm ci && npm run build && npm test` to regenerate the portable JavaScript and run the tests. If your framework hydrates the wrong arm, a minimal reproduction is welcome. Original Mercury source is MIT, copyright Despyke.
