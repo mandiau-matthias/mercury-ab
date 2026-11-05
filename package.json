@@ -1,18 +1,30 @@
 {
-	"name": "mercury-ab",
-	"version": "1.0.1",
-	"description": "Deterministic A/B assignment and consent-aware measurement for web apps.",
-	"type": "module",
-	"license": "MIT",
-	"exports": {
-		".": { "types": "./docs/lib/index.d.ts", "import": "./docs/lib/index.js" }
-	},
-	"files": ["docs/lib", "src", "LICENSE", "README.md"],
-	"scripts": {
-		"build": "tsc",
-		"test": "node --test test/*.test.mjs",
-		"start": "node server.mjs"
-	},
-	"devDependencies": { "typescript": "5.7.3" },
-	"engines": { "node": ">=18" }
+  "name": "mercury-ab",
+  "version": "1.1.0",
+  "description": "Deterministic A/B assignment and consent-aware measurement for web apps.",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./docs/lib/index.d.ts",
+      "import": "./docs/lib/index.js"
+    }
+  },
+  "files": [
+    "docs/lib",
+    "src",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test test/*.test.mjs",
+    "start": "node server.mjs"
+  },
+  "devDependencies": {
+    "typescript": "5.7.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
 }
